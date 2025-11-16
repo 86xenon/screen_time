@@ -371,13 +371,13 @@ object ScreenTimeMethod {
             val queryResult = usageStatsManager.queryUsageStats(
                 interval.type, start, end
             )
-            val filtered = queryResult.filter { stat ->
-                val withinWindow = stat.lastTimeUsed in start until end
-                val packageMatch = packagesName?.contains(stat.packageName) ?: true
-                withinWindow && packageMatch
+            if(packagesName != null){
+                val result = queryResult.filter { it.packageName in packagesName }
+                stats.addAll(result)
             }
-
-            stats.addAll(filtered)
+            else{
+                stats.addAll(queryResult)
+            }
 
             val usageMap = ArrayList<Map<String, Any>>()
 
